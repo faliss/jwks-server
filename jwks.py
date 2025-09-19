@@ -32,3 +32,16 @@ def get_jwks():
       n = base64.urlsafe_b64encode(numbers.n.to_bytes(256, 'big')).decode('utf-8').rstrip("=")
             jwks_keys.append({"kty": "RSA", "use": "sig", "kid": kid, "n": n, "e": e, "alg": "RS256"})
     return jwks_keys
+    
+@app.route("/.well-known/jwks.json", methods=["GET"])
+def jwks_endpoint():
+  return jsonify({"keys": get_jwks()})
+
+@app.route("/auth", methods=["POST"])
+def auth():
+  expired_param = request.args.get("expired", "false").lower()
+    if expired_param == "true":
+       kid = generate_rsa_key(expiry_minutes=-60)
+    else:
+        kid = generate_rsa_key(expiry_minutes=60)
+    
