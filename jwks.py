@@ -15,6 +15,9 @@ def generate_rsa_key(expiry_minutes=60):
     key_size=2048
   )
   public_key = private_key.public_key()
-
-kid= str(int(datetime.utcnow().timestamp()))
-expiry= datetime.utcnow() + timedelta(minutes=expiry_minutes)
+  
+  kid= str(int(datetime.utcnow().timestamp()))
+  expiry= datetime.utcnow() + timedelta(minutes=expiry_minutes)
+  
+  key[kid] = {"private": private_key, "public": public_key, "expiry": expiry}
+  return kid
