@@ -21,3 +21,14 @@ def generate_rsa_key(expiry_minutes=60):
   
   key[kid] = {"private": private_key, "public": public_key, "expiry": expiry}
   return kid
+
+def get_jwks():
+  jwks_keys = []
+  for kid, key_info in keys.items():
+    if key_info["expiry"] > datetime.utcnow():
+      public_key = key_info["public"]
+      numbers = public_key.public_numbers()
+      e = base64.urlsafe_b64encode(numbers.e.to_bytes(3, 'big')).decode('utf-8').rstrip("=")
+      n = base64.urlsafe_b64encode(numbers.n.to_bytes(256, 'big')).decode('utf-8').rstrip("=")
+            jwks_keys.append({"kty": "RSA", "use": "sig", "kid": kid, "n": n, "e": e, "alg": "RS256"})
+    return jwks_keys
