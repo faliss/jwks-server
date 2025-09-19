@@ -44,4 +44,18 @@ def auth():
        kid = generate_rsa_key(expiry_minutes=-60)
     else:
         kid = generate_rsa_key(expiry_minutes=60)
-    
+
+key_info = keys[kid]
+    payload = {
+        "sub": "1234",
+        "name": "test_user",
+        "iat": int(datetime.utcnow().timestamp()),
+        "exp": int(key_info["expiry"].timestamp())
+    }
+    token = jwt.encode(payload, key_info["private"], algorithm="RS256", headers={"kid": kid})
+    return jsonify({"token": token})
+
+  if __name__ == "__main__":
+    generate_rsa_key(expiry_minutes=60)
+    generate_rsa_key(expiry_minutes=-60)
+    app.run(port=8080, debug=True)
