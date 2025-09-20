@@ -33,7 +33,7 @@ def get_jwks():
       jwks_keys.append({
             "kty": "RSA",
             "use": "sig",
-            "kid": kid,
+            "kid": str(kid),
             "n": n,
             "e": e,
             "alg": "RS256"
