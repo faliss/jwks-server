@@ -30,7 +30,13 @@ def get_jwks():
       numbers = public_key.public_numbers()
       e = base64.urlsafe_b64encode(numbers.e.to_bytes(3, 'big')).decode('utf-8').rstrip("=")
       n = base64.urlsafe_b64encode(numbers.n.to_bytes(256, 'big')).decode('utf-8').rstrip("=")
-            jwks_keys.append({"kty": "RSA", "use": "sig", "kid": kid, "n": n, "e": e, "alg": "RS256"})
+            jwks_keys.append({"kty": "RSA"
+                              "use": "sig"
+                              "kid": kid
+                              "n": n
+                              "e": e
+                              "alg": "RS256"
+                             })
     return jwks_keys
     
 @app.route("/.well-known/jwks.json", methods=["GET"])
